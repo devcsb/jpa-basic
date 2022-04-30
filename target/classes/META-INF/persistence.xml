@@ -18,7 +18,8 @@
             <property name="hibernate.show_sql" value="true"/> <!--쿼리 나가는 거 볼지 말지 여부-->
             <property name="hibernate.format_sql" value="true"/> <!--sql을 예쁘게 포맷해줌.-->
             <property name="hibernate.use_sql_comments" value="true"/>
-            <!--<property name="hibernate.hbm2ddl.auto" value="create" />-->
+            <property name="hibernate.jdbc.batch_size" value="10"/>
+            <property name="hibernate.hbm2ddl.auto" value="create" />
         </properties>
     </persistence-unit>
 </persistence>
