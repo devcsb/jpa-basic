@@ -23,21 +23,26 @@ public class Member {
 
     /*
      * IDENTITY 전략에서는, em.persist() 호출 시점에 바로 insert 쿼리가 날아간다.
-     * 영속성 컨텍스트에는 key값으로 id값을 들고 있어야 하는데, 전략을 db에 위임했으므로,
-     * 쿼리를 보내지 않고서는 id를 알 수 없으므로.
+     * 영속성 컨텍스트에는 key값으로 id값을 들고 있어야 하는데, 쿼리를 보내지 않고서는 db가 정한 id를 알 수 없으므로.
      * 따로 select 쿼리는 안날아간다. JDBC 드라이버에 insert 시점에 리턴받는 식으로 짜여져 있으므로, JPA는 그것을 활용
      * 여러번 네트워크를 타긴 하지만, 한 트랜잭션 안에서 이루어지므로 큰 성능 손실은 없다.
      * 결국 시퀀스를 지원하지 않는 DB는 IDENTITY가 최선.
      * */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "MEMBER_SEQ_GENERATOR")
-
+    @Column(name = "member_id")
     private Long id;
 
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "username")
     private String username;
+
+//    @Column(name = "team_id")
+//    private Long teamId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     public Member() {
     }  //@Entity를 붙인 엔티티객체는 기본 생성자가 필요함. (리플렉션 같은 기술을 쓰기 위해)
@@ -56,5 +61,13 @@ public class Member {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }
