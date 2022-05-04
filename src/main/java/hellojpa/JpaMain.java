@@ -25,17 +25,24 @@ public class JpaMain {
 
             Member member = new Member();
             member.setUsername("member1");
-            member.setTeam(team);  //JPA가 알아서 team의 PK값을 꺼내서 member를 insert할 때 fk로 사용한다.
+            member.changeTeam(team);  // 연관관계 편의 메서드. 1 : N에서 1 쪽에 넣을지, N쪽에 넣을지 고민해서 결정.
             em.persist(member);
 
-            //db에서 가져오는 쿼리를 보고싶을 때
-            em.flush(); //쓰기 지연 저장소에 있는 sql을 db에 전부 날려보냄
-            em.clear(); // em 초기화
-            //위 2줄의 코드로 영속성컨텍스트가 완전히 비어있음을 보장하므로, 아래 코드로 인한 쿼리를 확실하게 볼 수 있음.
-            Member findMember = em.find(Member.class, member.getId());
+            team.addMember(member); // 연관관계 편의 메서드. 1 : N에서 1 쪽에 넣을지, N쪽에 넣을지 고민해서 결정.
 
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam = " + findTeam.getName());
+            //영속성 컨텍스트 비워서 아래 코드의 SQL을 보기 위함
+//            em.flush();
+//            em.clear();
+
+            Team findTeam = em.find(Team.class, team.getId());  //1차 캐시에 있음
+            List<Member> members = findTeam.getMembers();
+
+            System.out.println("==================");
+            System.out.println("members = " +  findTeam);
+            System.out.println("==================");
+
+//            Member findMember = em.find(Member.class, member.getId());
+//            List<Member> members = findMember.getTeam().getMembers(); //이 코드 실행하면 db에 값이 초기화되는 문제.
 
             tx.commit();
         } catch (Exception e) {

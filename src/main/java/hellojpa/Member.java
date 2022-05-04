@@ -33,7 +33,6 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-
     @Column(name = "username")
     private String username;
 
@@ -70,4 +69,11 @@ public class Member {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
+    }
+
+
 }
