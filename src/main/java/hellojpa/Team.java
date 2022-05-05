@@ -13,7 +13,9 @@ public class Team {
 
     private String name;
 
-    @OneToMany(mappedBy = "team") //Member 객체의 team 필드로 연관관계가 걸려있다. 주인은 Member.
+    /* 그냥 다대일 관계와 양방향참조로 해결하자! 유지보수성을 고려하여 */
+    @OneToMany
+    @JoinColumn(name = "team_id")  // 일대다 방식 사용시 @JoinColumn을 꼭 사용해야 함. 그렇지 않으면 조인 테이블 방식을 사용함
     private List<Member> members = new ArrayList<>(); //초기화해두면 add할 때 null pointer가 안뜨므로. 관례적으로 이렇게 해놓는다.
 
     public Long getId() {
@@ -39,11 +41,5 @@ public class Team {
     public void setMembers(List<Member> members) {
         this.members = members;
     }
-
-    public void addMember(Member member) {
-        member.setTeam(this);
-        members.add(member);
-    }
-
 
 }

@@ -19,30 +19,17 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
 
             Member member = new Member();
             member.setUsername("member1");
-            member.changeTeam(team);  // 연관관계 편의 메서드. 1 : N에서 1 쪽에 넣을지, N쪽에 넣을지 고민해서 결정.
+
             em.persist(member);
 
-            team.addMember(member); // 연관관계 편의 메서드. 1 : N에서 1 쪽에 넣을지, N쪽에 넣을지 고민해서 결정.
+            Team team = new Team();
+            team.setName("teamA");
+            team.getMembers().add(member);
 
-            //영속성 컨텍스트 비워서 아래 코드의 SQL을 보기 위함
-//            em.flush();
-//            em.clear();
-
-            Team findTeam = em.find(Team.class, team.getId());  //1차 캐시에 있음
-            List<Member> members = findTeam.getMembers();
-
-            System.out.println("==================");
-            System.out.println("members = " +  findTeam);
-            System.out.println("==================");
-
-//            Member findMember = em.find(Member.class, member.getId());
-//            List<Member> members = findMember.getTeam().getMembers(); //이 코드 실행하면 db에 값이 초기화되는 문제.
+            em.persist(team);
 
             tx.commit();
         } catch (Exception e) {

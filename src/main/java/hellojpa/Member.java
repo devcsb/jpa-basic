@@ -36,8 +36,8 @@ public class Member {
     @Column(name = "username")
     private String username;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
+    @ManyToOne(fetch = FetchType.LAZY) //일대다 관계 양방향 사용법(꼼수)
+    @JoinColumn(name = "team_id", insertable = false, updatable = false) //insert와 update를 막아서, 읽기 전용 매핑을 시킴으로써, 양방향 연관관계처럼 사용.
     private Team team;
 
     public Member() {
