@@ -40,6 +40,10 @@ public class Member {
     @JoinColumn(name = "team_id", insertable = false, updatable = false) //insert와 update를 막아서, 읽기 전용 매핑을 시킴으로써, 양방향 연관관계처럼 사용.
     private Team team;
 
+    @OneToOne
+    @JoinColumn(name = "locker_id")
+    private Locker locker;
+
     public Member() {
     }  //@Entity를 붙인 엔티티객체는 기본 생성자가 필요함. (리플렉션 같은 기술을 쓰기 위해)
 
